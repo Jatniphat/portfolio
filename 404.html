@@ -1,14 +1,41 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Redirecting...</title>
-    <script>
-      sessionStorage.redirect = location.pathname;
-    </script>
-    <meta http-equiv="refresh" content="0;URL='/'"></meta>
-  </head>
-  <body>
-    Redirecting...
-  </body>
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting...</title>
+  <script>
+    // ดึงเส้นทางปัจจุบัน
+    var pathSegmentsToKeep = 1;
+    var l = window.location;
+    
+    // GitHub Pages โดยมาตรฐานจะอยู่ภายใต้ subdomain username.github.io/repository-name/
+    // หรืออยู่ที่ subdirectory /repository-name/ ของโดเมนหลัก
+    // ในกรณีนี้เราต้องเก็บ segment แรกไว้ซึ่งคือ "portfolio"
+    var segmentCount = 0;
+    var location = window.location;
+    
+    // นับจำนวน segments ใน pathname (ไม่รวม leading slash)
+    if (location.pathname.length > 1) {
+      segmentCount = location.pathname.slice(1).split('/').length;
+    }
+    
+    // สร้าง URL สำหรับ redirect
+    var redirectUrl = location.protocol + '//' + location.hostname + 
+                     (location.port ? ':' + location.port : '');
+    
+    // เพิ่ม path segments จนถึงระดับที่คุณต้องการ (นั่นคือ portfolio/)
+    var path = location.pathname.split('/').slice(0, pathSegmentsToKeep + 1).join('/');
+    redirectUrl += path;
+    
+    // เพิ่ม parameter สำหรับหน้าที่ต้องการไป (เส้นทางหลังจาก portfolio/)
+    redirectUrl += '?p=/' + location.pathname.slice(path.length);
+    
+    // Redirect ไปยัง index.html พร้อมด้วยพารามิเตอร์
+    window.location.replace(redirectUrl);
+  </script>
+</head>
+<body>
+  <h1>Redirecting...</h1>
+  <p>If you are not redirected automatically, <a href="/">click here</a>.</p>
+</body>
 </html>
